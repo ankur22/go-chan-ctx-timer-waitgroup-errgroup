@@ -35,7 +35,7 @@ func main() {
 
 	lines := make(chan string, 1)
 
-	done := ctx.Done
+	done := ctx.Done()
 	eg, ctx := errgroup.WithContext(ctx)
 	eg.Go(func() error {
 		defer close(lines)
@@ -48,7 +48,7 @@ func main() {
 			time.Sleep(time.Second)
 
 			select {
-			case <-done():
+			case <-done:
 				fmt.Println("Reader: Context closed")
 				return ctx.Err()
 			default:
@@ -67,7 +67,7 @@ func main() {
 	eg.Go(func() error {
 		for {
 			select {
-			case <-done():
+			case <-done:
 				fmt.Println("Sender: Context closed")
 				return ctx.Err()
 			case <-timeoutTimer.C:
